@@ -40,9 +40,9 @@ https://github.com/alibaba-research/ChineseBLUE
 
 ***\*使用到的Bert预训练模型：\****
 
-实体识别模型：哈工大讯飞实验室开发的BERT-wwm, Chinese模型（https://github.com/ymcui/Chinese-BERT-wwm）
+实体识别模型：哈工大讯飞实验室开发的BERT-wwm, Chinese模型https://github.com/ymcui/Chinese-BERT-wwm
 
-意图识别模型、智能分诊模型：哈工大讯飞实验室开发的RBT3, Chinese模型（https://github.com/ymcui/Chinese-BERT-wwm）
+意图识别模型、智能分诊模型：哈工大讯飞实验室开发的RBT3, Chinese模型https://github.com/ymcui/Chinese-BERT-wwm
 
 ***\*运行方法：\****
 
