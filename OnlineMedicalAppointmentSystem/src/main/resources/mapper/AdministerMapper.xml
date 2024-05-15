@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.AdministerMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Administer">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="headUrl" column="headUrl" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <insert id="insertAdmin">
+        insert into administer(username, password, name, phone, headUrl, status, createTime, isDeleted) values (#{username}, #{password}, #{name}, #{phone}, #{headUrl}, #{status}, #{createTime}, #{isDeleted})
+    </insert>
+
+    <update id="updateAdmin">
+        update administer set username = #{username}, password = #{password}, name = #{name}, phone = #{phone}, headUrl = #{headUrl} where id = #{id}
+    </update>
+
+    <update id="updateAdminStatus">
+        update administer set status = #{status} where id = #{id}
+    </update>
+
+    <delete id="deleteAdminById">
+        delete from administer where id = #{id}
+    </delete>
+
+    <select id="getAdminByUserName" resultType="com.kanfs.omas.pojo.Administer">
+        select * from administer where username = #{username}
+    </select>
+
+    <select id="selectAdminById" resultType="com.kanfs.omas.pojo.Administer">
+        select * from administer where id = #{id}
+    </select>
+
+    <select id="selectPageList" resultType="com.kanfs.omas.pojo.Administer">
+        select a.id, a.username, a.password, a.name, a.phone, a.headUrl, a.status, a.createTime, a.isDeleted from administer a
+        <!--             join admin_role ar on a.id = ar.adminId join role r on ar.roleId = r.id -->
+                <where>
+                    <if test="searchObj.keyword != null and searchObj.keyword != null">
+                        and (username like CONCAT('%',#{searchObj.keyword},'%') or  name like CONCAT('%',#{searchObj.keyword},'%') or phone like CONCAT('%',#{searchObj.keyword},'%'))
+                    </if>
+                    <if test="searchObj.createTimeBegin != null and searchObj.createTimeBegin != null">
+                        and createTime &gt;= #{searchObj.creationTimeBegin}
+                    </if>
+                    <if test="searchObj.createTimeEnd != null and searchObj.createTimeEnd != null">
+                        and createTime &lt;= #{searchObj.creationTimeEnd}
+                    </if>
+<!--            <if test="searchObj.role != null and searchObj.role != null">-->
+<!--                and r.name like CONCAT('%',#{searchObj.role},'%')-->
+<!--            </if>-->
+        </where>
+        order by id asc
+    </select>
+
+    <select id="getTotalRowCount" resultType="int">
+        SELECT FOUND_ROWS()
+    </select>
+</mapper>

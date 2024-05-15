@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.HospitalMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Hospital">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="province" column="province" jdbcType="VARCHAR"/>
+            <result property="city" column="city" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="style" column="style" jdbcType="VARCHAR"/>
+            <result property="level" column="level" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="departmentNum" column="departmentNum" jdbcType="INTEGER"/>
+            <result property="doctorNum" column="doctorNum" jdbcType="INTEGER"/>
+            <result property="telephone" column="telephone" jdbcType="VARCHAR"/>
+            <result property="intro" column="intro" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="countHospitalNum" resultType="integer">
+        select count(*) from hospital
+    </select>
+
+    <select id="countDoctorNum" resultType="integer">
+        select sum(doctorNum) from hospital
+    </select>
+        
+    <select id="searchHospitalName" parameterType="string" resultType="string">
+        select name from hospital
+        <where>    name not like '%医生集团%'
+            <if test="province!='全国' and province != ''">and province like '%' #{province} '%' </if>
+            <if test="city!='全省' and city != ''">and city like '%' #{city} '%' </if>
+        </where> order by doctorNum desc limit 12
+    </select>
+
+    <select id="searchHospitalByName" parameterType="map" resultType="string">
+        select name from hospital <where> name not like '%医生集团%'<if test="hospitalName != ''"></if> and name like '%' #{hospitalName} '%' </where> order by doctorNum desc
+    </select>
+    <select id="selectPageList" resultType="com.kanfs.omas.pojo.Hospital">
+        select SQL_CALC_FOUND_ROWS * from hospital
+        <where>
+            <if test="searchObj.keyword != null and searchObj.keyword != null">
+                and name like CONCAT('%',#{searchObj.keyword},'%')
+            </if>
+            <if test="searchObj.type != null and searchObj.type != null">
+                and type = #{searchObj.type}
+            </if>
+            <if test="searchObj.level != null and searchObj.level != null">
+                and level = #{searchObj.level}
+            </if>
+            <if test="searchObj.style != null and searchObj.style != null">
+                and style = #{searchObj.style}
+            </if>
+            <if test="searchObj.hospitalId != null and searchObj.hospitalId != 0">
+                and id = #{searchObj.hospitalId}
+            </if>
+        </where>
+        order by id asc
+    </select>
+    <select id="getTotalRowCount" resultType="java.lang.Integer">
+        SELECT FOUND_ROWS()
+    </select>
+    <select id="getHospitalIdByName" resultType="java.lang.Long">
+        select id from hospital where name = #{name}
+    </select>
+</mapper>

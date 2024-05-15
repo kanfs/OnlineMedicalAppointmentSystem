@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.User">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="VARCHAR"/>
+            <result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="regDate" column="regDate" jdbcType="DATE"/>
+            <result property="headUrl" column="headUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findUserById" parameterType="int" resultType="com.kanfs.omas.pojo.User">
+        select  * from user where id = #{id}
+    </select>
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from user <where><if test="name!=''"> name like '%'#{name}'%' </if></where>
+    </select>
+    <select id="findByPage" parameterType="map" resultType="com.kanfs.omas.pojo.User">
+        select * from user <where><if test="name!=''"> name like '%'#{name}'%' </if></where> limit #{pager.firstLimitParam}, #{pager.perPageRows}
+    </select>
+    <select id="findUserByEmail" parameterType="string" resultType="com.kanfs.omas.pojo.User">
+        select * from user where email = #{email}
+    </select>
+    <select id="findUserByName" parameterType="string" resultType="com.kanfs.omas.pojo.User">
+        select * from user where name = #{name}
+    </select>
+    <select id="selectPageList" resultType="com.kanfs.omas.pojo.User">
+        select  SQL_CALC_FOUND_ROWS * from user
+        <where>
+            <if test="searchObj.name != '' and searchObj.name != null"> and name like CONCAT('%',#{searchObj.name},'%') </if>
+            <if test="searchObj.phoneNumber != '' and searchObj.phoneNumber != null"> and phoneNumber like CONCAT('%',#{searchObj.phoneNumber},'%') </if>
+            <if test="searchObj.address != '' and searchObj.address != null"> and address like CONCAT('%',#{searchObj.address},'%') </if>
+            <if test="searchObj.email != '' and searchObj.email != null"> and email like CONCAT('%',#{searchObj.email},'%') </if>
+            <if test="searchObj.createTimeBegin != null and searchObj.createTimeBegin != null">
+                and regDate &gt;= #{searchObj.creationTimeBegin}
+            </if>
+            <if test="searchObj.createTimeEnd != null and searchObj.createTimeEnd != null">
+                and regDate &lt;= #{searchObj.creationTimeEnd}
+            </if>
+        </where>
+        order by id asc
+    </select>
+    <select id="getTotalRowCount" resultType="java.lang.Integer">
+        SELECT FOUND_ROWS()
+    </select>
+    <update id="updateUserInfo" parameterType="map">
+        update user set name = #{name}, password = #{newPassword}, phoneNumber = #{phoneNumber}, headUrl = #{headUrl}
+            where id = #{userId}
+    </update>
+    <insert id="insertUser" parameterType="com.kanfs.omas.pojo.User">
+        insert into user(name, password, sex, phoneNumber, address, email, regDate) VALUES (#{name}, #{password}, #{sex}, #{phoneNumber}, #{address}, #{email}, #{regDate})
+    </insert>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.AdminRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.AdminRole">
+            <id property="adminRoleId" column="adminRoleId" jdbcType="INTEGER"/>
+            <result property="adminId" column="adminId" jdbcType="INTEGER"/>
+            <result property="roleId" column="roleId" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="insertRole">
+        insert into admin_role  (adminId,roleId) values (#{adminId},#{roleId})
+    </insert>
+
+    <delete id="deleteByAdminId">
+        delete from admin_role where adminId = #{adminId}
+    </delete>
+    <select id="selectListById" resultType="com.kanfs.omas.pojo.AdminRole">
+        select * from admin_role where adminId = #{adminId}
+    </select>
+</mapper>

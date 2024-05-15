@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Order">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="patientId" column="patientId" jdbcType="INTEGER"/>
+            <result property="scheduleId" column="scheduleId" jdbcType="INTEGER"/>
+            <result property="number" column="number" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="creationTime" column="creationTime" jdbcType="TIMESTAMP"/>
+            <result property="transactionId" column="transactionId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="saveOrder" parameterType="com.kanfs.omas.pojo.Order">
+        insert into `order` (patientId, scheduleId, number, status, creationTime)
+        values (#{patientId}, #{scheduleId}, #{number}, #{status}, #{creationTime})
+    </insert>
+
+    <update id="abort">
+        update `order` set status = 3 where id = #{id}
+    </update>
+    <update id="cancel">
+        update `order` set status = 2 where id = #{id}
+    </update>
+    <update id="confirm">
+        update `order` set status = 1,transactionId=#{transaction_id}  where id = #{id}
+    </update>
+    <update id="updateNumber">
+        update `order` set number = #{number} where id = #{id}
+    </update>
+
+
+    <delete id="deleteOrder">
+        delete from `order` where id = #{id}
+    </delete>
+
+    <select id="countOrder" parameterType="int" resultType="java.lang.Integer">
+        select count(*) from `order` where scheduleId = #{scheduleId} and status = 1
+    </select>
+    <select id="getId" resultType="java.lang.Integer">
+        SELECT id FROM `order` WHERE scheduleId = #{scheduleId} AND patientId = #{patientId} AND status &lt; 2
+    </select>
+    <select id="getOrdersByScheduleId" resultType="com.kanfs.omas.pojo.Order">
+        select * from `order` where scheduleId = #{scheduleId}
+    </select>
+    <select id="getOrderById" resultType="com.kanfs.omas.Vo.OrderVo">
+        SELECT o.id, o.patientId, o.scheduleId, o.number, o.status, o.creationTime, s.price, s.doctorId, s.workDate, p.userId,
+               p.name as patientName, p.identifyCardNumber, p.phone, d.name as doctorName, dep.name as departmentName , h.name as hospitalName from
+                `order` o join patient p on p.id = o.patientId
+                join schedule s on s.id = o.scheduleId
+                join doctor d on d.id = s.doctorId
+                join department dep on dep.id = d.departmentId
+                join hospital h on dep.hospitalId = h.id
+                where o.id = #{id}
+
+    </select>
+    <select id="getUserId" resultType="java.lang.Integer">
+        select distinct user.id from `order` join patient on patient.id = `order`.patientId join user on user.id = patient.userId
+    </select>
+    <select id="selectPageList" resultType="com.kanfs.omas.Vo.OrderVo">
+        SELECT SQL_CALC_FOUND_ROWS o.id, o.patientId, o.scheduleId, o.number, o.status, o.creationTime, s.price, s.doctorId, s.workDate, p.userId,
+               p.name as patientName, p.identifyCardNumber, p.phone, d.name as doctorName, dep.name as departmentName, h.name as hospitalName from
+            `order` o join patient p on p.id = o.patientId
+                      join schedule s on s.id = o.scheduleId
+                      join doctor d on d.id = s.doctorId
+                      join department dep on dep.id = d.departmentId
+                      join hospital h on dep.hospitalId = h.id
+        <where>
+            <if test="params.status != -1 and params.status != null">and o.status = #{params.status}</if>
+            <if test="params.patientId != 0 and params.patientId != null">and patientId = #{params.patientId}</if>
+            <if test="params.hospitalName != '' and params.hospitalName != null">and h.name like concat('%',#{params.hospitalName},'%')</if>
+            <if test="params.departmentName != '' and params.departmentName != null">and dep.name like concat('%',#{params.departmentName},'%')</if>
+            <if test="params.doctorName != '' and params.doctorName != null">and d.name like concat('%',#{params.doctorName},'%') </if>
+            <if test="params.workDate != '' and params.workDate != null">and s.workDate = #{params.workDate}</if>
+            <if test="params.patientName != '' and params.patientName != null">and (p.name like concat('%',#{params.patientName},'%') </if>
+            <if test="params.hospitalId != 0 and params.hospitalId != null">and h.id = #{params.hospitalId} </if>
+            <if test="params.doctorId != 0 and params.doctorId != null">and d.id = #{params.doctorId} </if>
+        </where> order by workDate desc
+    </select>
+
+    <select id="getTotalRowCount" resultType="java.lang.Integer">
+        SELECT FOUND_ROWS()
+    </select>
+    <select id="getTodayOrder" resultType="com.kanfs.omas.Vo.OrderVo">
+        select o.id, o.patientId, o.scheduleId, o.number, o.status, o.creationTime, s.price, s.doctorId, s.workDate, p.userId,
+        p.name as patientName, p.identifyCardNumber, p.phone, d.name as doctorName, dep.name as departmentName, h.name as hospitalName from
+        `order` o join patient p on p.id = o.patientId
+        join schedule s on s.id = o.scheduleId
+        join doctor d on d.id = s.doctorId
+        join department dep on dep.id = d.departmentId
+        join hospital h on dep.hospitalId = h.id
+        where s.workDate = CURDATE() and o.status = 1
+    </select>
+    <select id="getTimeoutOrder" resultType="com.kanfs.omas.pojo.Order">
+        select * from `order` o where o.status = 0 and o.creationTime &lt;= #{time}
+    </select>
+</mapper>

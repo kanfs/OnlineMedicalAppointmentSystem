@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.MessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Message">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userId" column="userId" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="isSee" column="isSee" jdbcType="BIT"/>
+            <result property="creationTime" column="creationTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <select id="getMessageList" parameterType="map" resultType="map">
+        select SQL_CALC_FOUND_ROWS * from message where userId = #{userId} order by isSee ASC, creationTime DESC limit ${firstLimit}, 10
+    </select>
+
+    <select id="getTotalRowCount" resultType="int">
+        SELECT FOUND_ROWS()
+    </select>
+
+    <update id="viewMessage" parameterType="int">
+        update message set isSee = true where id = #{id}
+    </update>
+</mapper>

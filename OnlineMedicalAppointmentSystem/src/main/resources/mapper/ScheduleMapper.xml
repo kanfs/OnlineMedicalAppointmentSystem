@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.ScheduleMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Schedule">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="doctorId" column="doctorId" jdbcType="BIGINT"/>
+            <result property="workDate" column="workDate" jdbcType="DATE"/>
+            <result property="availableNum" column="availableNum" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="BIT"/>
+            <result property="price" column="price" jdbcType="DOUBLE"/>
+            <result property="creationTime" column="creationTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="selectSchedules" resultType="com.kanfs.omas.pojo.Schedule">
+        SELECT s.* FROM schedule s JOIN doctor d ON s.doctorId = d.id
+        WHERE d.departmentId = #{departmentId} AND to_days(s.workDate) = to_days(#{date})
+    </select>
+
+</mapper>

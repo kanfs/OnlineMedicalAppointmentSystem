@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.MenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Menu">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="component" column="component" jdbcType="VARCHAR"/>
+            <result property="perms" column="perms" jdbcType="VARCHAR"/>
+            <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="sortValue" column="sort_value" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+        <sql id="columns">
+                m.id,m.parent_id,m.name,m.type,m.path,m.component,m.perms,m.icon,m.sort_value,m.status,m.create_time,m.update_time,m.is_deleted
+        </sql>
+    <select id="findListByAdminId" resultType="com.kanfs.omas.pojo.Menu">
+            select distinct <include refid="columns" />
+            from menu m
+            inner join role_menu rm on rm.menu_id = m.id
+            inner join admin_role ur on ur.roleId = rm.role_id
+            where
+            ur.adminId = #{id}
+            and m.status = 1
+            order by m.sort_value
+    </select>
+
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.DoctorMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Doctor">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="departmentId" column="departmentId" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="grade" column="grade" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="FLOAT"/>
+            <result property="intro" column="intro" jdbcType="VARCHAR"/>
+            <result property="goodat" column="goodat" jdbcType="VARCHAR"/>
+            <result property="availableTime" column="availableTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="findMatchedDoctors" parameterType="map" resultType="map">
+            SELECT SQL_CALC_FOUND_ROWS *
+            FROM hdd
+            <where>
+                hospitalName not like '%医生集团%'
+                <if test="departmentName!='' and departmentName!='不限'"> and #{departmentName} = departmentName </if>
+                <if test="hospitalName!='' and hospitalName!='不限'">and #{hospitalName} = hospitalName </if>
+                <if test="province!='' and province!='全国'"> and province like '%' #{province} '%'</if>
+                <if test="city!='' and city!='全省'"> and city like '%' #{city} '%'</if>
+                <if test="disease != ''">and goodat like '%' #{disease} '%' </if>
+            </where> order by score desc, id asc limit ${firstLimit}, ${pageSize}
+    </select>
+
+    <select id="getTotalRowCount" resultType="int">
+        SELECT FOUND_ROWS()
+    </select>
+    <select id="findDoctorById" resultType="com.kanfs.omas.pojo.Doctor">
+        select * from doctor where id = #{id}
+    </select>
+    <select id="selectPageList" resultType="map">
+        select sql_calc_found_rows * from hdd
+        <where>
+            <if test="searchObj.hospitalName != '' and searchObj.hospitalName != null"> and hospitalName like CONCAT('%', #{searchObj.hospitalName}, '%')</if>
+            <if test="searchObj.departmentName != '' and searchObj.departmentName != null"> and departmentName like CONCAT('%', #{searchObj.departmentName}, '%')</if>
+            <if test="searchObj.name != '' and searchObj.name != null"> and doctorName like CONCAT('%', #{searchObj.name}, '%')</if>
+            <if test="searchObj.grade != '' and searchObj.grade != null"> and grade = #{searchObj.grade} </if>
+            <if test="searchObj.title != '' and searchObj.title != null"> and title = #{searchObj.title} </if>
+            <if test="searchObj.score != '' and searchObj.score != null"> and score >= #{searchObj.score} </if>
+            <if test="searchObj.hospitalId != 0 and searchObj.hospitalId != null"> and hospitalId = #{searchObj.hospitalId} </if>
+        </where>
+        order by score desc
+    </select>
+
+    <select id="getDoctorInfo" resultType="com.kanfs.omas.Vo.DoctorVo">
+        select * from hdd where id = #{id}
+    </select>
+
+</mapper>

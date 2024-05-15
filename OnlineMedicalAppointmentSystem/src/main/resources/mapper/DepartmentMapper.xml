@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.DepartmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Department">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="hospitalId" column="hospitalId" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="doctorNum" column="doctorNum" jdbcType="INTEGER"/>
+            <result property="intro" column="intro" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findDepartmentNames" parameterType="string" resultType="string">
+        select name from department <where><if test="name != '不限'"> hospitalId = (select id from hospital where #{hospitalName} = name)</if></where>
+    </select>
+
+    <select id="selectPageList" resultType="com.kanfs.omas.Vo.DepartmentVo">
+        select SQL_CALC_FOUND_ROWS department.id as id, department.name as name, h.name as hospitalName, department.doctorNum as doctorNum, department.intro as intro from department join hospital h on h.id = department.hospitalId
+        <where>
+            <if test="searchObj.hospitalName != null and searchObj.hospitalName != null">
+                and h.name like CONCAT('%',#{searchObj.hospitalName},'%')
+            </if>
+            <if test="searchObj.name != null and searchObj.name != null">
+                and department.name like CONCAT('%',#{searchObj.name},'%')
+            </if>
+            <if test="searchObj.hospitalId != null and searchObj.hospitalId != 0">
+                and h.id = #{searchObj.hospitalId}
+            </if>
+                                                                                                                                           </where>
+        order by department.id asc
+    </select>
+
+    <select id="getTotalRowCount" resultType="java.lang.Integer">
+        SELECT FOUND_ROWS()
+    </select>
+</mapper>

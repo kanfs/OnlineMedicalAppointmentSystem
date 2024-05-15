@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.AdminDoctorMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.AdminDoctor">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="adminId" column="adminId" jdbcType="INTEGER"/>
+            <result property="doctorId" column="doctorId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <select id="findDoctorIdByAdminId" resultType="java.lang.Long">
+        select doctorId from admin_doctor where adminId = #{adminId}
+    </select>
+</mapper>

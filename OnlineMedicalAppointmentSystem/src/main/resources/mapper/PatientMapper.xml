@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.PatientMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Patient">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userId" column="userId" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="identifyCardNumber" column="identifyCardNumber" jdbcType="VARCHAR"/>
+            <result property="birthdate" column="birthdate" jdbcType="TIMESTAMP"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="BIT"/>
+            <result property="status" column="status" jdbcType="BIT"/>
+            <result property="creationTime" column="creationTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insertPatient">
+        insert into patient(userId, name, identifyCardNumber, birthdate, address, phone, sex, status,  creationTime) VALUES (#{userId}, #{name}, #{identifyCardNumber}, #{birthdate}, #{address}, #{phone}, #{sex}, #{status}, #{creationTime})
+    </insert>
+    <update id="updatePatient" parameterType="map">
+        update patient set name = #{name}, identifyCardNumber = #{identifyCardNumber}, sex = #{sex}, phone = #{phone}, address = #{address}
+        where id = #{patientId}
+    </update>
+    <update id="updatePatientStatusById">
+        update patient set status = #{status} where id = #{id}
+    </update>
+    <delete id="deletePatientById" parameterType="int">
+        delete from patient where id = #{id}
+    </delete>
+
+    <select id="getPatientsByUserId" parameterType="int" resultType="com.kanfs.omas.pojo.Patient">
+        select * from patient where userId = #{userId}
+    </select>
+    <select id="findUserByIdentifyCardNumber" resultType="com.kanfs.omas.pojo.Patient">
+        select * from patient where identifyCardNumber = #{identifyCardNumber}
+    </select>
+    <select id="getPatientById" parameterType="int" resultType="com.kanfs.omas.pojo.Patient">
+        select * from patient where id = #{id}
+    </select>
+
+</mapper>

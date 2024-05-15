@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kanfs.omas.mapper.FunctionMapper">
+
+    <resultMap id="BaseResultMap" type="com.kanfs.omas.pojo.Function">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parentId" jdbcType="INTEGER"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="isLeaf" column="isLeaf" jdbcType="BIT"/>
+            <result property="nodeOrder" column="nodeOrder" jdbcType="INTEGER"/>
+            <result property="iconfont" column="iconfont" jdbcType="VARCHAR"/>
+    </resultMap>
+
+</mapper>
