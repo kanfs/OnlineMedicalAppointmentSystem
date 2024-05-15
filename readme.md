@@ -24,19 +24,19 @@ Java开发工具：IntelliJ IDEA 2022.2.3
 
 医疗知识图谱数据集
 
-（https://github.com/liuhuanyong/QASystemOnMedicalKG）
+https://github.com/liuhuanyong/QASystemOnMedicalKG
 
 智能分诊模型数据集
 
-（https://huggingface.co/datasets/FreedomIntelligence/Huatuo26M-Lite）
+https://huggingface.co/datasets/FreedomIntelligence/Huatuo26M-Lite
 
 意图判断模型数据集
 
-（https://github.com/ishine/CMID）
+https://github.com/ishine/CMID
 
 实体识别模型数据集
 
-（https://github.com/alibaba-research/ChineseBLUE）
+https://github.com/alibaba-research/ChineseBLUE
 
 ***\*使用到的Bert预训练模型：\****
 
@@ -53,7 +53,7 @@ Java开发工具：IntelliJ IDEA 2022.2.3
 5. 运行OnlineMedicalAppointmentSystem\src\main\resources\python下的BertTriage、KBQA-for-Diagnosis\knowledge_extraction\bert_bilstm_crf和KBQA-for-Diagnosis\nlu\bert_intent_recognition下的train.py文件训练模型
 6. 使用IDEA打开后端项目OnlineMedicalAppointmentSystem和xxl_job分别运行
 7. 打开前端项目前台模块mas-front和mas-admin先(注意npm的版本)npm install再运行对应的.bat文件
-8. 用户端为http://locolhost:8080，管理员端：http://locolhost:9518，定时任务管理端：http://localhost:8899
+8. 用户端为http://locolhost:8080 管理员端：http://locolhost:9518 定时任务管理端：http://localhost:8899
 
  
 
